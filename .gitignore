@@ -13,3 +13,5 @@ _deps
 build
 kernel.iso
 kernel.bin
+asem
+asem.o
