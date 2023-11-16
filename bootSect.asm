@@ -16,37 +16,48 @@
 ; 64 bit long mode
 ; rax, rbx, rcx, rdx
 
-    org 0x7c00              ; Indicated where Boot code starts; makes sure adresses don't change
+        org 0x7c00              ; Indicated where Boot code starts; makes sure adresses don't change
 
-    ; mov ax, 0x0e54                ; Should directly print the charater
-    mov ah, 0x0e            ; int 10/ ah Bios teletype output
-    mov bx, teststring      ; moving memory address at teststring into bx register
-    mov al, [bx]            ; Charater we want to print
-    int 0x10                ; BIOS video interrupt
-    mov al, [bx+1]          ; Add 1 byte offset to bx address, mov into al; 'E'
-    int 0x10                ; BIOS video interrupt
-    add bx, 2               ; Adds 2 byte offset to value in bx, 'S'
-    mov al, [bx]            ; mov address of bx to al
-    int 0x10                ; BIOS video interrupt
-    mov al, [bx+1]          ; Add 1 byte offset to bx address, mov into al; 'S'
-    int 0x10                ; BIOS video interrupt
+        ; Set video mode
+        mov ah, 0x00            ; Int 0x10/ ah 0x00 => set video mode
+        mov al, 0x03            ; 80x25 test mode
+        int 0x10
 
-    ; mov al, 'E'
-    ; int 0x10
+        ; Change color
+        mov ah, 0x0b            ; Int 0x10/ ah 0x0b => set color/ pallet
+        mov bh, 0x00
+        mov bl, 0x01
+        int 0x10
 
-    ; mov al, 'S'
-    ; int 0x10
+        ; Tele-type output
+        ; mov ax, 0x0e54                ; Should directly print the charater
+        mov ah, 0x0e            ; int 10/ ah Bios teletype output
+        mov bx, teststring      ; moving memory address at teststring into bx register
 
-    ; mov al, 'T'
-    ; int 0x10
+        call print_string
 
+        mov bx, string2
+        call print_string
 
-teststring:         db 'TEST', 0   ; 0/null to null terminate
+print_string:
+        mov al, [bx]            ; move charecter value at address in bx into al
+        cmp al, 0
+        je end_print              ; jump if equal (al == 0) to halt label
+        int 0x10                ; Call for BIOS video interrupt
+        add bx, 1               ; Move address to next charecter
+        jmp print_string        ; Jump back to the loop, and continue
 
-; here:
+end_print:
+        ret
+
+teststring:         db 'TEST', 0xd, 0xa, 0   ; 0/null to null terminate ; 0xd carriage return `\r` & 0xa newline `\n`
+string2:            db 'also a test', 0
+
+end_pgm:
 
     jmp $                   ; Jump repeatedly to label loop : Similar command `jmp $`
 
+    ;; Boot sector magic
     times 510-($-$$) db 0   ; pads out 0 untill we reach 510th byte
 
     dw 0xaa55               ; boot magic number
