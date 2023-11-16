@@ -39,23 +39,13 @@
         mov bx, string2
         call print_string
 
-print_string:
-        mov al, [bx]            ; move charecter value at address in bx into al
-        cmp al, 0
-        je end_print              ; jump if equal (al == 0) to halt label
-        int 0x10                ; Call for BIOS video interrupt
-        add bx, 1               ; Move address to next charecter
-        jmp print_string        ; Jump back to the loop, and continue
+        ;; End pgm
+        jmp $
 
-end_print:
-        ret
+        include 'print_string.asm'
 
 teststring:         db 'TEST', 0xd, 0xa, 0   ; 0/null to null terminate ; 0xd carriage return `\r` & 0xa newline `\n`
 string2:            db 'also a test', 0
-
-end_pgm:
-
-    jmp $                   ; Jump repeatedly to label loop : Similar command `jmp $`
 
     ;; Boot sector magic
     times 510-($-$$) db 0   ; pads out 0 untill we reach 510th byte
