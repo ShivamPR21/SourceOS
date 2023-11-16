@@ -1,2 +1,0 @@
-# SourceOS
-Understanding OS : Project 
