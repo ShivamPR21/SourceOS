@@ -1,0 +1,18 @@
+version: 3
+
+env:
+  BOOTSECT: ./bin/bootSect.bin
+  KERNEL: ./bin/kernel.bin
+  OS: ./bin/OS.bin
+
+tasks:
+  build:
+    cmds:
+      - mkdir -p bin
+      - fasm src/asm/bootSect.asm $BOOTSECT
+      - fasm src/asm/kernel.asm $KERNEL
+      - cat $BOOTSECT $KERNEL > $OS
+
+  clean:
+    cmds:
+      - rm -rf ./bin/*
