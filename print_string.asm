@@ -4,6 +4,7 @@
 
 print_string:
         pusha                   ; store all register values on the stack
+        mov ah, 0x0e            ; int 10/ ah Bios teletype output
 
 print_char:
         mov al, [bx]            ; move charecter value at address in bx into al

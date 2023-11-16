@@ -31,7 +31,7 @@
 
         ; Tele-type output
         ; mov ax, 0x0e54                ; Should directly print the charater
-        mov ah, 0x0e            ; int 10/ ah Bios teletype output
+        ; mov ah, 0x0e            ; int 10/ ah Bios teletype output
         mov bx, teststring      ; moving memory address at teststring into bx register
 
         call print_string
@@ -39,13 +39,17 @@
         mov bx, string2
         call print_string
 
+        mov dx, 0x12AB          ; sample hex number to print
+        call print_hex
+
         ;; End pgm
         jmp $
 
         include 'print_string.asm'
+        include 'print_hex.asm'
 
-teststring:         db 'TEST', 0xd, 0xa, 0   ; 0/null to null terminate ; 0xd carriage return `\r` & 0xa newline `\n`
-string2:            db 'also a test', 0
+teststring:         db 'CHAR TEST: Testing', 0xd, 0xa, 0   ; 0/null to null terminate ; 0xd carriage return `\r` & 0xa newline `\n`
+string2:            db 'Hex Test: ', 0
 
     ;; Boot sector magic
     times 510-($-$$) db 0   ; pads out 0 untill we reach 510th byte
