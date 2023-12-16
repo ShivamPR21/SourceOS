@@ -39,10 +39,10 @@ run_cmd:
         ; pop di                  ; restore di from stack
         mov byte [di], 0        ; null terminate cndString from di
         mov al, [cmdString]
-        cmp al, 'F'           ; file table command/menue option
-        jne not_found
         cmp al, 'N'             ; end current program
         je end_command
+        cmp al, 'F'           ; file table command/menue option
+        jne not_found
         mov si, success         ; command found!
         call print_string
         jmp get_input

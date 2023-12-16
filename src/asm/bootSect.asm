@@ -26,7 +26,7 @@ read_disk1:
         ;; set up ES:BX memory address/segment:offset to load sector(s) into
         mov bx, 0x2000          ; load sector to memory address 0x2000
         mov es, bx              ; ES = 0x1000
-        mov bx, 0x0             ; ES:BX = 0x1000:0
+        mov bx, 0x0             ; ES:BX = 0x2000:0
 
         ; setup disk read
         mov dh, 0x0             ; head 0

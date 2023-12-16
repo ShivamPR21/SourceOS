@@ -1,9 +1,10 @@
 version: 3
 
 env:
-  BOOTSECT: ./bin/bootSect.bin
-  KERNEL: ./bin/kernel.bin
-  OS: ./bin/OS.bin
+  BOOTSECT: ./bin/bootSect.bin # Start of boot sector
+  KERNEL: ./bin/kernel.bin # kernel code remains in next sector then boot
+  FILETABLE: ./bin/file_table.bin # File table
+  OS: ./bin/OS.bin # Final binary file : works as an OS image
 
 tasks:
   build:
@@ -11,8 +12,9 @@ tasks:
       - mkdir -p bin
       - fasm src/asm/bootSect.asm $BOOTSECT
       - fasm src/asm/kernel.asm $KERNEL
-      - cat $BOOTSECT $KERNEL > $OS
+      - fasm src/asm/file_table.asm $FILETABLE
+      - cat $BOOTSECT $FILETABLE $KERNEL > $OS
 
   clean:
     cmds:
-      - rm -rf ./bin/*
+      - rm -rf ./bin/*.bin
